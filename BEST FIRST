@@ -1,0 +1,72 @@
+SuccList = {
+    'Arad': [['Sibiu', 253], ['Timisoara', 329], ['Zerind', 374]],
+    'Sibiu': [['Rimnicu Vilcea', 193], ['Arad', 366], ['Fagarus', 176], ['Oradea', 380]],
+    'Rimnicu Vilcea': [['Sibiu', 253], ['Pitesti', 100]],
+    'Pitesti': [['Craiova', 160], ['Rimicu Vilcea', 193], ['Bucharest', 0]],
+    'Fagarus': [['Sibiu', 253], ['Bucharest', 0]],
+    'Timisoara': [['Arad', 366], ['Lugoj', 274]],
+    'Zerind': [['Arad', 366], ['Oradea', 380]],
+    'Oradea': [['Sibiu', 253]]
+}
+
+Start = 'Arad'
+Goal = 'Bucharest'
+Explored = list()
+SUCCESS = True
+FAILURE = False
+State = FAILURE
+
+def GENCHILD(N):
+    New_list = list()
+    if N in SuccList.keys():
+        New_list = SuccList[N]
+    return New_list
+
+def GOALTEST(N):
+    if N == Goal:
+        return True
+    else:
+        return False
+
+def APPEND(L1, L2):
+    New_list = list(L1) + list(L2)
+    return New_list
+
+def SORT(L):
+    L.sort(key=lambda x: x[1])
+    return L
+
+def BestFirstSearch():
+    Frontier = [[Start, 366]]
+    EXPLORED = list()
+    global State
+    global Explored
+    while (len(Frontier) != 0) and (State != SUCCESS):
+        print("\n")
+        N = Frontier[0]
+        print("N=", N)
+        del Frontier[0]
+        if GOALTEST(N[0]) == True:
+            State = SUCCESS
+            EXPLORED = APPEND(EXPLORED, [N])
+            print("EXPLORED=", EXPLORED)
+        else:
+            EXPLORED = APPEND(EXPLORED, [N])
+            print("EXPLORED=", EXPLORED)
+            CHILD = GENCHILD(N[0])
+            print("CHILD=", CHILD)
+            for val in EXPLORED:
+                if val in CHILD:
+                    CHILD.remove(val)
+            for val in Frontier:
+                if val in CHILD:
+                    CHILD.remove(val)
+            Frontier = APPEND(CHILD, Frontier)
+            print("Unsorted Frontier=", Frontier)
+            SORT(Frontier)
+            print("Sorted Frontier=", Frontier)
+    Explored = EXPLORED
+    return State
+
+result = BestFirstSearch()
+print(Explored, result)
