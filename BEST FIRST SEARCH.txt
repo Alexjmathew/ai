@@ -1,0 +1,61 @@
+SuccList = {
+    'Arad': [['Sibiu', 253], ['Timisoara', 329], ['Zerind', 374]],
+    'Sibiu': [['Rimnicu Vilcea', 193], ['Arad', 366], ['Fagarus', 176], ['Oradea', 380]],
+    'Rimnicu Vilcea': [['Sibiu', 253], ['Pitesti', 100]],
+    'Pitesti': [['Craiova', 160], ['Rimnicu Vilcea', 193], ['Bucharest', 0]],
+    'Fagarus': [['Sibiu', 253], ['Bucharest', 0]],
+    'Timisoara': [['Arad', 366], ['Lugoj', 274]],
+    'Zerind': [['Arad', 366], ['Oradea', 380]],
+    'Oradea': [['Sibiu', 253]]
+}
+Start = 'Arad'
+Goal = 'Bucharest'
+Explored = []
+SUCCESS = True
+FAILURE = False
+State = FAILURE
+def GENCHILD(N):
+    if N in SuccList.keys():
+        return SuccList[N]
+    return []
+def GOALTEST(N):
+    return N == Goal
+def APPEND(L1, L2):
+    return list(L1) + list(L2)
+def SORT(L):
+    L.sort(key=lambda x: x[1]) 
+    return L
+def BestFirstSearch():
+    Frontier = [[Start, 0]] 
+    global State
+    global Explored
+    while Frontier and State != SUCCESS:
+        print("\nCurrent Frontier:", Frontier)       
+        SORT(Frontier)
+        N = Frontier.pop(0) 
+        print("N =", N)
+        if GOALTEST(N[0]):
+            State = SUCCESS
+            Explored = APPEND(Explored, [N])
+            print("EXPLORED =", Explored)
+        else:
+            Explored = APPEND(Explored, [N])
+            print("EXPLORED =", Explored)
+
+            CHILD = GENCHILD(N[0])
+            print("CHILD =", CHILD)
+
+            # Remove already explored nodes from CHILD
+            CHILD = [child for child in CHILD if child[0] not in [exp[0] for exp in Explored]]
+            # Remove nodes in the frontier from CHILD
+            CHILD = [child for child in CHILD if child not in Frontier]
+
+            Frontier = APPEND(Frontier, CHILD)  # Append CHILD elements to Frontier
+
+            print("Unsorted Frontier =", Frontier)
+
+    return State
+
+result = BestFirstSearch()  # Call search algorithm
+print("Explored nodes:", Explored, "Result:", result)
+

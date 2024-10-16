@@ -1,0 +1,24 @@
+graph = {
+    '5': ['3', '7'],
+    '3': ['2', '4'],
+    '7': ['8'],
+    '2': [],
+    '4': ['8'],
+    '8': []
+}
+def dfs(visited, graph, startnode, goalnode):
+    if startnode not in visited:
+        visited.append(startnode)  
+        if startnode == goalnode:
+            print("Goal is reached!")
+            print("The path taken to reach the goal is:", visited)
+            return True  
+        for neighbour in graph[startnode]:
+            if dfs(visited, graph, neighbour, goalnode): 
+                return True  
+    return False  
+print("Depth-First Search")
+visited_path = []
+goal_reached = dfs(visited_path, graph, '5', '7')
+if not goal_reached:
+    print("Goal has not been reached")
